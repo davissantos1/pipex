@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/13 14:32:39 by dasimoes          #+#    #+#             */
+/*   Updated: 2025/09/13 21:30:30 by dasimoes         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 /* ./pipex file1 cmd1 cmd2 file2
 * bash: < file1 cmd1 | cmd2 > file2
 * The pipex program mimics the behavior of command from line 2
@@ -5,71 +17,72 @@
 * then stdout is redirected to cmd2's stdin and then cmd2's stdout is redirected to file2's FD
 *
 * Observations.:
-* 1 - I need to fork twice for each process and use execve on them to run each command.
+* 1 - I need to fork twice, once for each process and use execve on them to run each command.
 * 2 - I need to always close both ends of every process' pipe 
 * 3 - I should use the access function to see if I can access an FD or if it even exists
 * 4 - Always check for errors on functions such as write, read, whatever
-* 5 - No reason to malloc anything nor use my GC
+* 5 - Use the damn GC for the path
 * 6 - I need to provide the full path of the executable to execve
 */
 
 #include "pipex.h"
 
-int	func_error(int num)
+int	pipex_cmd(t_pipex *pipex)
 {
-	perror("Pipex error: ");
-	return (num)
+	pipex->file1 = open(pipex->p_file1, O_RDONLY);
+	if (pipex->cmd1 == -1)
+		return (-1);
+	if (dup2(pipex->, 0) == -1)
+		return (-1);
+
 }
 
-char	*get_path(char **env)
+int	pipex_set(t_pipex *pipex)
 {
-	char	*path;
-
-	path = NULL;
-	while (*env)
+	pipex->pid1 = fork();
+	if (pipex->pid1 == -1)
+		return (-1);
+	if (pipex->pid1 == 0)
 	{
-		if (!ft_strncmp("PATH=", *env, 5))
-			break;
-		env++;
+		if (pipex_cmd(av, env, gc) == -1)
+			return (-1);
 	}
-	if (*env)
-		path = ft_strdup(*env);
-	return (path);
+	else
+	{
+		pipex->pid2 = fork();
+		if (pipex->pid2 == -1)
+			return (-1);
+		if (pipex->pid2 == 0)
+		{
+			if (pipex_cmd(av, env, gc) == -1)
+				return (-1);
+		}
+	}
 }
 
 int	main(int ac, char **av, char **env)
 {
-	int	cmd1;
-	int	cmd2;
-	int fd[2];
-	int	file1;
-	char *path;
+	t_gc 	*gc;
+	t_pipex	*pipex;
 
-	path = get_path(env);
-
+	gc = gc_init();
+	if (!gc)
+		return (func_error(1, gc));
 	if (ac != 5)
 	{
 		ft_putstr_fd("Pipex error: not enough arguments.\n", 2);
-		return (1);
+		gc_free_all(gc);
+		return (2);
 	}
 	else
 	{
-		cmd1 = fork();
-		if (cmd1 == 0)
-		{
-			file1 = av[1];
-			if (open(file1, O_RDONLY) == -1)
-				return (func_error(3));
-			if (dup2(file1, 0) == -1)
-				return (func_error(4));
-			if (pipe(fd) == -1)
-				return (func_error(2));
-			// run execve?
-		}
-		else
-		{
-
-		}
+		if (access(av[1], F_OK | R_OK))
+			return (func_error(3, gc));
+		pipex = pipex_start(av, env, gc);
+		if(!pipex)
+			return (func_error(4, gc));
+		if (pipex_set(av, env, gc) == -1)
+			return (func_error(5, gc));
 	}
 	return (0);
 }

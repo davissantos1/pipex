@@ -29,35 +29,28 @@
 
 int	pipex_cmd(t_pipex *pipex)
 {
-	pipex->file1 = open(pipex->p_file1, O_RDONLY);
-	if (pipex->cmd1 == -1)
-		return (-1);
-	if (dup2(pipex->, 0) == -1)
-		return (-1);
 
 }
 
-int	pipex_set(t_pipex *pipex)
+
+int	pipex_process(t_pipex *pipex)
 {
-	pipex->pid1 = fork();
-	if (pipex->pid1 == -1)
+	pipex->file1 = open(pipex->p_file1, O_RDONLY);
+	if (pipex->cmd1 == -1)
 		return (-1);
+	if (dup2(pipex->file1, 0) == -1)
+		return (-1);
+
 	if (pipex->pid1 == 0)
 	{
-		if (pipex_cmd(av, env, gc) == -1)
-			return (-1);
+
 	}
-	else
+	else if (pipex->pid2 == 0)
 	{
-		pipex->pid2 = fork();
-		if (pipex->pid2 == -1)
-			return (-1);
-		if (pipex->pid2 == 0)
-		{
-			if (pipex_cmd(av, env, gc) == -1)
-				return (-1);
-		}
+
+
 	}
+
 }
 
 int	main(int ac, char **av, char **env)
@@ -81,8 +74,9 @@ int	main(int ac, char **av, char **env)
 		pipex = pipex_start(av, env, gc);
 		if(!pipex)
 			return (func_error(4, gc));
-		if (pipex_set(av, env, gc) == -1)
+		if (pipex_process(pipex) == -1)
 			return (func_error(5, gc));
 	}
+	gc_free_all(gc);
 	return (0);
 }

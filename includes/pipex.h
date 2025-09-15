@@ -28,17 +28,14 @@ typedef struct s_pipex
 {
 	int		pid1;
 	int		pid2;
-	int		cmd1;
-	int 	cmd2;
 	int 	file1;
 	int 	file2;
 	int 	fd[2];
-	char	*p_cmd1;
-	char	*p_cmd2;
-	char	*p_file1;
-	char	*p_file2;
-	char	**p_env;
-}	t_pipex;	
+	char	**cmd1;
+	char	**cmd2;
+	char	**paths;
+	char	**env;
+}	t_pipex;
 	
 // Macros
 

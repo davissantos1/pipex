@@ -19,7 +19,7 @@ int	func_error(int num, t_gc *gc)
 	return (num)
 }
 
-char	**get_path(char **env, t_gc *gc)
+char	**get_env(char **env, t_gc *gc)
 {
 	char	*path;
 
@@ -39,7 +39,7 @@ char	**get_path(char **env, t_gc *gc)
 	return (path);
 }
 
-char	*set_path(char *s, char **env, t_gc *gc)
+char	*get_path(char *s, char **env, t_gc *gc)
 {
 	char	*path;
 	char	*tmp;
@@ -55,36 +55,24 @@ char	*set_path(char *s, char **env, t_gc *gc)
 		{
 			tmp = ft_strjoin("/", s);
 			path = ft_strjoin(env[i], tmp);
+			free(tmp);
 			if (!access(path, F_OK))
 				break;
+			free(path);
 			i++;
 		}
 	}
+	if(!gc_addptr(path, gc, GC_DEFAULT))
+		return (NULL);
 	return (path);
 }
 
-t_pipex *pipex_start(char **av, char **env, t_gc *gc)
+char	**get_cmd(char *s, t_gc *gc)
 {
-	t_pipex *pipex;
+	char	**split;
 
-	pipex = gc_malloc(sizeof(t_pipex), gc, GC_DEFAULT);
-	if (!pipex)
+	split = ft_split(s, ' ');
+	if (!gc_addptr(split))
 		return (NULL);
-	pipex->pid1 = 0;
-	pipex->pid2 = 0;
-	pipex->cmd1 = 0;
-	pipex->cmd2 = 0;
-	pipex->file1 = 0;
-	pipex->file2 = 0;
-	if (pipe(pipex->fd) == -1)
-			return (func_error(0));
-	pipex->p_env = get_path(env, gc);
-	if (!pipex->p_env || !*pipex->p_env)
-		return (NULL);
-	pipex->p_file1 = set_path(av[1], pipex->p_env, gc);
-	pipex->p_cmd1 = set_path(av[1], pipex->p_env, gc);
-	pipex->p_cmd2 = set_path(av[1], pipex->p_env, gc);
-	pipex->p_file2 = set_path(av[1], pipex->p_env, gc);
-	return (pipex);
+	return (split);
 }
-

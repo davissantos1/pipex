@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:32:39 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/13 21:30:30 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/15 15:38:49 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,30 +27,31 @@
 
 #include "pipex.h"
 
-int	pipex_cmd(t_pipex *pipex)
-{
-
-}
-
-
 int	pipex_process(t_pipex *pipex)
 {
-	pipex->file1 = open(pipex->p_file1, O_RDONLY);
-	if (pipex->cmd1 == -1)
-		return (-1);
-	if (dup2(pipex->file1, 0) == -1)
-		return (-1);
-
 	if (pipex->pid1 == 0)
 	{
-
+		if (dup2(pipex->file1, 0) == -1)
+			return (-1);
+		if (dup2(pipex->fd[1], 1) == -1)
+			return (-1);
+		if (pipex_kill(pipex) == -1)
+			return (-1);
+		if (execve(pipex->path[1], pipex->cmd1 + 1, pipex->env) == -1)
+			return (-1);
 	}
 	else if (pipex->pid2 == 0)
 	{
-
-
+		if (dup2(pipex->fd[0], 0) == -1)
+			return (-1);
+		if (dup2(pipex->file2, 1) == -1)
+			return (-1);
+		if (pipex_kill(pipex) == -1)
+			return (-1);
+		if (execve(pipex->path[2], pipex->cmd2 + 1, pipex->env) == -1)
+			return (-1);
 	}
-
+	return (0);
 }
 
 int	main(int ac, char **av, char **env)
@@ -58,25 +59,21 @@ int	main(int ac, char **av, char **env)
 	t_gc 	*gc;
 	t_pipex	*pipex;
 
+	pipex = NULL;
 	gc = gc_init();
 	if (!gc)
-		return (func_error(1, gc));
+		return (pipex_close(pipex, gc, 0, 1));
 	if (ac != 5)
-	{
-		ft_putstr_fd("Pipex error: not enough arguments.\n", 2);
-		gc_free_all(gc);
-		return (2);
-	}
+		return (pipex_close(pipex, gc, 1, 2));
 	else
 	{
-		if (access(av[1], F_OK | R_OK))
-			return (func_error(3, gc));
 		pipex = pipex_start(av, env, gc);
 		if(!pipex)
-			return (func_error(4, gc));
+			return (pipex_close(pipex, gc, 0, 3));
 		if (pipex_process(pipex) == -1)
-			return (func_error(5, gc));
+			return (pipex_close(pipex, gc, 0, 4));
 	}
-	gc_free_all(gc);
+	if (pipex_close(pipex, gc, -1, 0) == 5)
+		return (5);
 	return (0);
 }

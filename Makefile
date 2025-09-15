@@ -1,8 +1,8 @@
 # Variables
 
 CC= cc
-CFLAGS= -Wall -Wextra -Werror -Wpedantic -Iincludes
-SRC= src/main.c
+CFLAGS= -Wall -Wextra -Werror -Wpedantic -Iincludes -Ilibft
+SRC= src/main.c src/pipex.c src/utils.c
 OBJ= $(SRC:.c=.o)
 NAME= pipex
 LIBFT_DIR= libft

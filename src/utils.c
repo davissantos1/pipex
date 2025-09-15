@@ -6,22 +6,15 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:43:13 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/13 21:25:28 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/15 15:52:49 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	func_error(int num, t_gc *gc)
-{
-	perror("Pipex error: ");
-	gc_free_all(gc);
-	return (num)
-}
-
 char	**get_env(char **env, t_gc *gc)
 {
-	char	*path;
+	char	**path;
 
 	path = NULL;
 	while (*env)
@@ -32,7 +25,7 @@ char	**get_env(char **env, t_gc *gc)
 	}
 	if (*env)
 	{
-		path = ft_split(env + 5, ':');
+		path = ft_split(*env + 5, ':');
 		if (!gc_addptr(path, gc, GC_DEFAULT))
 			return (NULL);
 	}
@@ -70,9 +63,11 @@ char	*get_path(char *s, char **env, t_gc *gc)
 char	**get_cmd(char *s, t_gc *gc)
 {
 	char	**split;
+	char	*add;
 
 	split = ft_split(s, ' ');
-	if (!gc_addptr(split))
+	add = gc_addptr(split, gc, GC_DEFAULT);
+	if (!add)
 		return (NULL);
 	return (split);
 }

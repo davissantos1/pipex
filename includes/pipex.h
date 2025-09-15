@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 20:12:56 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/15 15:41:35 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:42:20 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ typedef struct s_pipex
 	int 	file1;
 	int 	file2;
 	int 	fd[2];
+	char	*path[2];
 	char	**cmd1;
 	char	**cmd2;
-	char	**path;
 	char	**env;
 }	t_pipex;
 	

@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 11:25:04 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/15 15:40:26 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:10:00 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ int	pipex_kill(t_pipex *pipex)
 int	pipex_close(t_pipex *pipex, t_gc *gc, int flag, int num)
 {
 	if (flag == 0)
-		perror("Pipex error: ");
+		perror("Pipex error");
 	else if (flag == 1)
 		ft_putstr_fd("Pipex error: not enough arguments.\n", 2);
 	if (pipex != NULL)
 	{
 		if (pipex_kill(pipex) == -1)
 		{
-			perror("Pipex error: ");
+			perror("Pipex error");
 			gc_free_all(gc);
 			return (5);
 		}
@@ -72,12 +72,10 @@ t_pipex *pipex_start(char **av, char **env, t_gc *gc)
 		return (NULL);
 	pipex->cmd1 = get_cmd(av[2], gc);
 	pipex->cmd2 = get_cmd(av[3], gc);
-	pipex->path[0] = get_path(av[1], pipex->env, gc);
-	pipex->path[1] = get_path(pipex->cmd1[0], pipex->env, gc);
-	pipex->path[2] = get_path(pipex->cmd2[0], pipex->env, gc);
-	pipex->path[3] = get_path(av[4], pipex->env, gc);
-	pipex->file1 = open(pipex->path[0], O_RDONLY);
-	pipex->file2 = open(pipex->path[3], O_CREAT | O_TRUNC | O_WRONLY);
+	pipex->path[0] = get_path(pipex->cmd1[0], pipex->env, gc);
+	pipex->path[1] = get_path(pipex->cmd2[0], pipex->env, gc);
+	pipex->file1 = open(av[1], O_RDONLY);
+	pipex->file2 = open(av[4], O_CREAT | O_TRUNC | O_RDWR, 0644);
 	if (pipex->file1 == -1 || pipex->file2 == -1)
 		return (NULL);
 	if (pipex_fork(pipex) == -1)

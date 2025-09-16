@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:32:39 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/16 18:03:39 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:24:17 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	main(int ac, char **av, char **env)
 	}
 	if (waitpid(pipex->pid1, 0, 0) == -1)
 		return (pipex_close(pipex, gc, 0, 6));
-	if (waitpid(pipex->pid1, 0, 0) == -1)
+	if (waitpid(pipex->pid2, 0, 0) == -1)
 		return (pipex_close(pipex, gc, 0, 7));
 	if (pipex_close(pipex, gc, -1, 0) == 7)
 		return (7);

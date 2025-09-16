@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 20:12:56 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/15 17:42:20 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:44:34 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 // Structs
 typedef struct s_pipex
 {
-	int		pid1;
-	int		pid2;
+	pid_t	pid1;
+	pid_t	pid2;
 	int 	file1;
 	int 	file2;
 	int 	fd[2];

@@ -26,7 +26,7 @@ char	**get_env(char **env, t_gc *gc)
 	if (*env)
 	{
 		path = ft_split(*env + 5, ':');
-		if (!gc_addptr(path, gc, GC_DEFAULT))
+		if (!gc_addmtx(path, gc, GC_DEFAULT))
 			return (NULL);
 	}
 	return (path);
@@ -65,7 +65,7 @@ char	**get_cmd(char *s, t_gc *gc)
 	char	*add;
 
 	split = ft_split(s, ' ');
-	add = gc_addptr(split, gc, GC_DEFAULT);
+	add = gc_addmtx(split, gc, GC_DEFAULT);
 	if (!add)
 		return (NULL);
 	return (split);

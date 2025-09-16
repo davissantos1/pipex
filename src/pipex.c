@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 11:25:04 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/15 18:10:00 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:04:11 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	pipex_close(t_pipex *pipex, t_gc *gc, int flag, int num)
 		{
 			perror("Pipex error");
 			gc_free_all(gc);
-			return (5);
+			return (7);
 		}
 	}
 	gc_free_all(gc);
@@ -58,15 +58,15 @@ int	pipex_fork(t_pipex *pipex)
 	return (0);
 }
 
-t_pipex *pipex_start(char **av, char **env, t_gc *gc)
+t_pipex	*pipex_start(char **av, char **env, t_gc *gc)
 {
-	t_pipex *pipex;
+	t_pipex	*pipex;
 
 	pipex = gc_malloc(sizeof(t_pipex), gc, GC_DEFAULT);
 	if (!pipex)
 		return (NULL);
 	if (pipe(pipex->fd) == -1)
-			return (NULL);
+		return (NULL);
 	pipex->env = get_env(env, gc);
 	if (!pipex->env || !*pipex->env)
 		return (NULL);

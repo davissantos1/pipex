@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:32:39 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/15 21:12:16 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:03:39 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	pipex_process(t_pipex *pipex)
 
 int	main(int ac, char **av, char **env)
 {
-	t_gc 	*gc;
+	t_gc	*gc;
 	t_pipex	*pipex;
 
 	pipex = NULL;
@@ -53,14 +53,16 @@ int	main(int ac, char **av, char **env)
 	else
 	{
 		pipex = pipex_start(av, env, gc);
-		if(!pipex)
+		if (!pipex)
 			return (pipex_close(pipex, gc, 0, 3));
 		if (pipex_process(pipex) == -1)
 			return (pipex_close(pipex, gc, 0, 4));
 	}
-	if (pipex_close(pipex, gc, -1, 0) == 5)
-		return (5);
-	waitpid(pipex->pid1, 0, WNOHANG);
-	waitpid(pipex->pid2, 0, WNOHANG);
+	if (waitpid(pipex->pid1, 0, 0) == -1)
+		return (pipex_close(pipex, gc, 0, 6));
+	if (waitpid(pipex->pid1, 0, 0) == -1)
+		return (pipex_close(pipex, gc, 0, 7));
+	if (pipex_close(pipex, gc, -1, 0) == 7)
+		return (7);
 	return (0);
 }

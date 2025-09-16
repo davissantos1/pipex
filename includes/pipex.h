@@ -6,12 +6,12 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 20:12:56 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/15 18:44:34 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:02:39 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SETUP_H
-#define SETUP_H
+#ifndef PIPEX_H
+# define PIPEX_H
 
 // External include
 # include <unistd.h>
@@ -29,17 +29,17 @@ typedef struct s_pipex
 {
 	pid_t	pid1;
 	pid_t	pid2;
-	int 	file1;
-	int 	file2;
-	int 	fd[2];
+	int		file1;
+	int		file2;
+	int		fd[2];
 	char	*path[2];
 	char	**cmd1;
 	char	**cmd2;
 	char	**env;
 }	t_pipex;
-	
+
 //Prototypes
-t_pipex *pipex_start(char **av, char **env, t_gc *gc);
+t_pipex	*pipex_start(char **av, char **env, t_gc *gc);
 char	**get_env(char **env, t_gc *gc);
 char	*get_path(char *s, char **env, t_gc *gc);
 char	**get_cmd(char *s, t_gc *gc);

@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:43:13 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/15 21:00:00 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:04:46 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**get_env(char **env, t_gc *gc)
 	while (*env)
 	{
 		if (!ft_strncmp("PATH=", *env, 5))
-			break;
+			break ;
 		env++;
 	}
 	if (*env)
@@ -49,10 +49,10 @@ char	*get_path(char *s, char **env, t_gc *gc)
 			tmp = ft_strjoin("/", s);
 			path = ft_strjoin(env[i], tmp);
 			free(tmp);
-			if(!gc_addptr(path, gc, GC_DEFAULT))
+			if (!gc_addptr(path, gc, GC_DEFAULT))
 				return (NULL);
 			if (!access(path, F_OK))
-				break;
+				break ;
 			i++;
 		}
 	}

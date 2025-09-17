@@ -6,11 +6,17 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:43:13 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/16 18:04:46 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/17 00:09:44 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+int		cmd_error(void)
+{
+	ft_putstr_fd("Pipex error: command not found\n", 2);
+	return (-1);
+}
 
 char	**get_env(char **env, t_gc *gc)
 {
@@ -53,6 +59,7 @@ char	*get_path(char *s, char **env, t_gc *gc)
 				return (NULL);
 			if (!access(path, F_OK))
 				break ;
+			path = NULL;
 			i++;
 		}
 	}

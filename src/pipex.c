@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 11:25:04 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/16 21:51:04 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/17 00:19:04 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,15 @@ int	pipex_kill(t_pipex *pipex)
 {
 	if (pipex->pid1 > 0 && pipex->pid2 > 0)
 	{
-		if (close(pipex->file1) == -1)
-			return (-1);
-		if (close(pipex->file2) == -1)
-			return (-1);
+		close(pipex->file1);
+		close(pipex->file2);
 	}
 	else
 	{
-		if (close(pipex->file1) == -1)
-			return (-1);
-		if (close(pipex->file2) == -1)
-			return (-1);
-		if (close(pipex->fd[0]) == -1)
-			return (-1);
-		if (close(pipex->fd[1]) == -1)
-			return (-1);
+		close(pipex->file1);
+		close(pipex->file2);
+		close(pipex->fd[0]);
+		close(pipex->fd[1]);
 	}
 	return (0);
 }

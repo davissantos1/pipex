@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:32:39 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/16 22:28:17 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/17 00:08:14 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ int	pipex_process(t_pipex *pipex)
 			return (-1);
 		if (pipex_kill(pipex) == -1)
 			return (-1);
-		if (execve(pipex->path[0], pipex->cmd1, pipex->env) == -1)
-			return (-1);
+		if (pipex->path[0] == NULL)
+			return (cmd_error());
+		execve(pipex->path[0], pipex->cmd1, pipex->env);
 	}
 	else if (pipex->pid2 == 0)
 	{
@@ -33,8 +34,9 @@ int	pipex_process(t_pipex *pipex)
 			return (-1);
 		if (pipex_kill(pipex) == -1)
 			return (-1);
-		if (execve(pipex->path[1], pipex->cmd2, pipex->env) == -1)
-			return (-1);
+		if (pipex->path[1] == NULL)
+			return (cmd_error());
+		execve(pipex->path[1], pipex->cmd2, pipex->env);
 	}
 	return (0);
 }

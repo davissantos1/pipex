@@ -36,6 +36,7 @@ typedef struct s_pipex
 	char	**cmd1;
 	char	**cmd2;
 	char	**env;
+	t_gc	*garbage;
 }	t_pipex;
 
 //Prototypes
@@ -47,6 +48,6 @@ int		pipex_process(t_pipex *pipex);
 int		pipex_kill(t_pipex *pipex);
 int		pipex_close(t_pipex *pipex, t_gc *gc, int flag, int num);
 int		pipex_fork(t_pipex *pipex);
-int		cmd_error(void);
+void	cmd_error(t_pipex *pipex);
 
 #endif

@@ -16,15 +16,21 @@ int	pipex_kill(t_pipex *pipex)
 {
 	if (pipex->pid1 > 0 && pipex->pid2 > 0)
 	{
-		close(pipex->file1);
-		close(pipex->file2);
+		if (close(pipex->file1) == -1)
+			return (-1);
+		if (close(pipex->file2) == -1)
+			return (-1);
 	}
 	else
 	{
-		close(pipex->file1);
-		close(pipex->file2);
-		close(pipex->fd[0]);
-		close(pipex->fd[1]);
+		if (close(pipex->file1) == -1)
+			return (-1);
+		if (close(pipex->file2) == -1)
+			return (-1);
+		if (close(pipex->fd[0]) == -1)
+			return (-1);
+		if (close(pipex->fd[1]) == -1)
+			return (-1);
 	}
 	return (0);
 }
@@ -76,19 +82,20 @@ t_pipex	*pipex_start(char **av, char **env, t_gc *gc)
 	pipex = gc_malloc(sizeof(t_pipex), gc, GC_DEFAULT);
 	if (!pipex)
 		return (NULL);
+	pipex->garbage = gc;
 	if (pipe(pipex->fd) == -1)
 		return (NULL);
 	pipex->env = get_env(env, gc);
 	if (!pipex->env || !*pipex->env)
 		return (NULL);
-	pipex->cmd1 = get_cmd(av[2], gc);
-	pipex->cmd2 = get_cmd(av[3], gc);
-	pipex->path[0] = get_path(pipex->cmd1[0], pipex->env, gc);
-	pipex->path[1] = get_path(pipex->cmd2[0], pipex->env, gc);
 	pipex->file1 = open(av[1], O_RDONLY);
 	pipex->file2 = open(av[4], O_CREAT | O_TRUNC | O_RDWR, 0644);
 	if (pipex->file1 == -1 || pipex->file2 == -1)
 		return (NULL);
+	pipex->cmd1 = get_cmd(av[2], gc);
+	pipex->cmd2 = get_cmd(av[3], gc);
+	pipex->path[0] = get_path(pipex->cmd1[0], pipex->env, gc);
+	pipex->path[1] = get_path(pipex->cmd2[0], pipex->env, gc);
 	if (pipex_fork(pipex) == -1)
 		return (NULL);
 	return (pipex);

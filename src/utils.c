@@ -12,10 +12,11 @@
 
 #include "pipex.h"
 
-int		cmd_error(void)
+void	cmd_error(t_pipex *pipex)
 {
 	ft_putstr_fd("Pipex error: command not found\n", 2);
-	return (-1);
+	gc_free_all(pipex->garbage);
+	exit(5);
 }
 
 char	**get_env(char **env, t_gc *gc)

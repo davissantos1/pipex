@@ -23,7 +23,7 @@ int	pipex_process(t_pipex *pipex)
 		if (pipex_kill(pipex) == -1)
 			return (-1);
 		if (pipex->path[0] == NULL)
-			return (cmd_error());
+			cmd_error(pipex);
 		execve(pipex->path[0], pipex->cmd1, pipex->env);
 	}
 	else if (pipex->pid2 == 0)
@@ -35,7 +35,7 @@ int	pipex_process(t_pipex *pipex)
 		if (pipex_kill(pipex) == -1)
 			return (-1);
 		if (pipex->path[1] == NULL)
-			return (cmd_error());
+			cmd_error(pipex);
 		execve(pipex->path[1], pipex->cmd2, pipex->env);
 	}
 	return (0);

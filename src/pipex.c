@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 11:25:04 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/17 00:19:04 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/17 19:03:50 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,21 @@ int	pipex_kill(t_pipex *pipex)
 {
 	if (pipex->pid1 > 0 && pipex->pid2 > 0)
 	{
-		if (close(pipex->file1) == -1)
-			return (-1);
+		if (pipex->file1 >= 0)
+		{
+			if (close(pipex->file1) == -1)
+				return (-1);
+		}
 		if (close(pipex->file2) == -1)
 			return (-1);
 	}
 	else
 	{
-		if (close(pipex->file1) == -1)
-			return (-1);
+		if (pipex->file1 >= 0)
+		{
+			if (close(pipex->file1) == -1)
+				return (-1);
+		}
 		if (close(pipex->file2) == -1)
 			return (-1);
 		if (close(pipex->fd[0]) == -1)
@@ -67,8 +73,11 @@ int	pipex_fork(t_pipex *pipex)
 	}
 	if (pipex->pid1 > 0 && pipex->pid2 > 0)
 	{
-		if (close(pipex->fd[0]) == -1)
-			return (-1);
+		if (pipex->file1 >= 0)
+		{
+			if (close(pipex->fd[0]) == -1)
+				return (-1);
+		}
 		if (close(pipex->fd[1]) == -1)
 			return (-1);
 	}
@@ -90,8 +99,6 @@ t_pipex	*pipex_start(char **av, char **env, t_gc *gc)
 		return (NULL);
 	pipex->file1 = open(av[1], O_RDONLY);
 	pipex->file2 = open(av[4], O_CREAT | O_TRUNC | O_RDWR, 0644);
-	if (pipex->file1 == -1 || pipex->file2 == -1)
-		return (NULL);
 	pipex->cmd1 = get_cmd(av[2], gc);
 	pipex->cmd2 = get_cmd(av[3], gc);
 	pipex->path[0] = get_path(pipex->cmd1[0], pipex->env, gc);

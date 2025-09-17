@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 20:12:56 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/17 00:08:03 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/17 18:54:00 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,6 @@ int		pipex_process(t_pipex *pipex);
 int		pipex_kill(t_pipex *pipex);
 int		pipex_close(t_pipex *pipex, t_gc *gc, int flag, int num);
 int		pipex_fork(t_pipex *pipex);
-void	cmd_error(t_pipex *pipex);
+void	arg_error(t_pipex *pipex);
 
 #endif

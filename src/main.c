@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:32:39 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/17 00:08:14 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/17 19:08:16 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,26 @@ int	pipex_process(t_pipex *pipex)
 {
 	if (pipex->pid1 == 0)
 	{
+		if (pipex->path[0] == NULL || pipex->file1 == -1)
+			arg_error(pipex);
 		if (dup2(pipex->file1, 0) == -1)
 			return (-1);
 		if (dup2(pipex->fd[1], 1) == -1)
 			return (-1);
 		if (pipex_kill(pipex) == -1)
 			return (-1);
-		if (pipex->path[0] == NULL)
-			cmd_error(pipex);
 		execve(pipex->path[0], pipex->cmd1, pipex->env);
 	}
 	else if (pipex->pid2 == 0)
 	{
+		if (pipex->path[1] == NULL || pipex->file2 == -1)
+			arg_error(pipex);
 		if (dup2(pipex->fd[0], 0) == -1)
 			return (-1);
 		if (dup2(pipex->file2, 1) == -1)
 			return (-1);
 		if (pipex_kill(pipex) == -1)
 			return (-1);
-		if (pipex->path[1] == NULL)
-			cmd_error(pipex);
 		execve(pipex->path[1], pipex->cmd2, pipex->env);
 	}
 	return (0);

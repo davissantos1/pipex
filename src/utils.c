@@ -6,7 +6,7 @@
 /*   By: dasimoes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 14:43:13 by dasimoes          #+#    #+#             */
-/*   Updated: 2025/09/17 19:35:54 by dasimoes         ###   ########.fr       */
+/*   Updated: 2025/09/17 19:47:43 by dasimoes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	arg_error(t_pipex *pipex)
 {
+	if (pipex->file1 == -1 && pipex->pid1 == 0)
+		ft_putstr_fd("Pipex error: No such file or directory\n", 2);
 	if (pipex->path[0] == NULL || pipex->path[1] == NULL)
 		ft_putstr_fd("Pipex error: command not found\n", 2);
-	if (pipex->file1 == -1 || pipex->file2 == -1)
-		ft_putstr_fd("Pipex error: No such file or directory\n", 2);
 	pipex_kill(pipex);
 	gc_free_all(pipex->garbage);
 	exit(5);
